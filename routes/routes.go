@@ -2,53 +2,71 @@ package routes
 
 import (
 	"coinbase-go/controllers"
+	"fmt"
+	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 )
 
 //InitRoutes is...
 func InitRoutes() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "GET":
-			w.Write([]byte("get"))
-		default:
-			http.Error(w, "", http.StatusBadRequest)
-		}
-	})
+	router := mux.NewRouter()
+	err := godotenv.Load()
+	api := router.PathPrefix("/api/v1").Subrouter()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	fmt.Println("succesfully load env file")
 
-	http.HandleFunc("/metadata", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "GET":
-			controllers.GetAllMetadata(w, r)
-		default:
-			http.Error(w, "", http.StatusBadRequest)
-		}
-	})
+	api.HandleFunc("/metas", handlerMetas)
+	api.HandleFunc("/metadata/ids", handlerMetasIds)
+	api.HandleFunc("/ticker", handlerTicker)
+	api.HandleFunc("/ticker/ids", handlerTickerIds)
 
-	http.HandleFunc("/metadata/ids", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "POST":
-			controllers.GetMetadataIds(w, r)
-		default:
-			http.Error(w, "", http.StatusBadRequest)
-		}
-	})
+	log.Fatal(http.ListenAndServe(":8080", router))
 
-	http.HandleFunc("/ticker", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "GET":
-			controllers.GetTickerAll(w, r)
-		default:
-			http.Error(w, "", http.StatusBadRequest)
-		}
-	})
+}
 
-	http.HandleFunc("/ticker/ids", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "POST":
-			controllers.GetTickerIds(w, r)
-		default:
-			http.Error(w, "", http.StatusBadRequest)
-		}
-	})
+func handlerMetas(w http.ResponseWriter, r *http.Request) {
+	// switch r.Method {
+	// case "GET":
+	// 	controllers.GetAllMetadata(w, r)
+	// default:
+	// 	http.Error(w, "", http.StatusBadRequest)
+	// }
+	controllers.GetAllMetadata(w, r)
+}
+
+func handlerMetasIds(w http.ResponseWriter, r *http.Request) {
+	// switch r.Method {
+	// case "POST":
+	// 	controllers.GetMetadataIds(w, r)
+	// default:
+	// 	http.Error(w, "", http.StatusBadRequest)
+	// }
+	controllers.GetMetadataIds(w, r)
+}
+
+func handlerTicker(w http.ResponseWriter, r *http.Request) {
+	// switch r.Method {
+	// case "GET":
+	// 	controllers.GetTickerAll(w, r)
+	// default:
+	// 	http.Error(w, "", http.StatusBadRequest)
+	// }
+
+	controllers.GetTickerAll(w, r)
+}
+
+func handlerTickerIds(w http.ResponseWriter, r *http.Request) {
+	// switch r.Method {
+	// case "POST":
+	// 	controllers.GetTickerIds(w, r)
+	// default:
+	// 	http.Error(w, "", http.StatusBadRequest)
+	// }
+
+	controllers.GetTickerIds(w, r)
 }
