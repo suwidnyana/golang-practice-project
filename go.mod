@@ -3,6 +3,7 @@ module coinbase-go
 go 1.13
 
 require (
+	github.com/gorilla/mux v1.8.0
 	github.com/howeyc/fsnotify v0.9.0 // indirect
 	github.com/joho/godotenv v1.3.0
 	github.com/mattn/go-colorable v0.1.8 // indirect

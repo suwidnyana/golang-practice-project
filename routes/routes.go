@@ -9,8 +9,6 @@ import (
 func InitRoutes() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
-		case "POST":
-			w.Write([]byte("post"))
 		case "GET":
 			w.Write([]byte("get"))
 		default:

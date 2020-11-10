@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/joho/godotenv"
 )
@@ -12,13 +13,14 @@ import (
 // Todo struct to map the response
 func main() {
 	err := godotenv.Load()
+	port := os.Getenv("PORT")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
 	fmt.Println("succesfully load api")
 
 	routes.InitRoutes()
-	fmt.Println("server started at localhost:9000")
-	http.ListenAndServe(":9000", nil)
+
+	fmt.Println("server started at port:", port)
+	http.ListenAndServe(":"+port, nil)
 }
